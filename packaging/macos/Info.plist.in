@@ -7,13 +7,13 @@
   <key>CFBundleDevelopmentRegion</key>
   <string>en</string>
   <key>CFBundleDisplayName</key>
-  <string>DeckCraft</string>
+  <string>우신 발표</string>
   <key>CFBundleName</key>
-  <string>DeckCraft</string>
+  <string>우신 발표</string>
   <key>CFBundleExecutable</key>
-  <string>DeckCraft</string>
+  <string>WooshinSlides</string>
   <key>CFBundleIdentifier</key>
-  <string>ai.storyteller.deckcraft</string>
+  <string>com.wooshin.tools.slides</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundlePackageType</key>
@@ -24,12 +24,12 @@
   <string>@SHORT_VERSION@</string>
   <key>CFBundleVersion</key>
   <string>@SHORT_VERSION@</string>
-  <key>DeckCraftVersion</key>
+  <key>WooshinSlidesVersion</key>
   <string>@VERSION@</string>
-  <key>DeckCraftBuildCommit</key>
+  <key>WooshinSlidesBuildCommit</key>
   <string>@BUILD_SHA@</string>
   <key>CFBundleIconFile</key>
-  <string>DeckCraft</string>
+  <string>WooshinSlides</string>
   <key>LSApplicationCategoryType</key>
   <string>public.app-category.productivity</string>
   <!-- Must match MACOSX_DEPLOYMENT_TARGET in package.sh. Big Sur is the first release on
@@ -45,21 +45,21 @@
   <key>NSHumanReadableCopyright</key>
   <string>Copyright © the DeckCraft authors. MIT OR Apache-2.0.</string>
 
-  <!-- DeckCraft's own format: a zip of a JSON manifest plus media. -->
+  <!-- Wooshin Slides's own format: a zip of a JSON manifest plus media. -->
   <key>UTExportedTypeDeclarations</key>
   <array>
     <dict>
       <key>UTTypeIdentifier</key>
       <string>ai.storyteller.deckcraft.presentation</string>
       <key>UTTypeDescription</key>
-      <string>DeckCraft Presentation</string>
+      <string>Wooshin Slides Presentation</string>
       <key>UTTypeConformsTo</key>
       <array>
         <string>public.data</string>
         <string>public.presentation</string>
       </array>
       <key>UTTypeIconFile</key>
-      <string>DeckCraft</string>
+      <string>WooshinSlides</string>
       <key>UTTypeTagSpecification</key>
       <dict>
         <key>public.filename-extension</key>

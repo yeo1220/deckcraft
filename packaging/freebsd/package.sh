@@ -12,7 +12,8 @@ set -euo pipefail
 # shellcheck source=../common.sh
 . "$(dirname "${BASH_SOURCE[0]}")/../common.sh"
 LINUX="$ROOT/packaging/linux"
-APP_ID=ai.storyteller.deckcraft
+SOURCE_APP_ID=ai.storyteller.deckcraft
+APP_ID=com.wooshin.tools.slides
 
 if [ "${1:-}" != "--skip-build" ]; then
   (cd "$ROOT" && cargo build --release --locked -p deckcraft -p deckcraft-cli)
@@ -31,15 +32,21 @@ rm -rf "$WORK"
 mkdir -p "$STAGE/bin" "$STAGE/share/applications" "$STAGE/share/metainfo" "$STAGE/share/mime/packages" "$STAGE/share/icons" "$STAGE/share/doc/deckcraft"
 
 install -m 755 "$BIN/deckcraft" "$BIN/deckcraft-cli" "$STAGE/bin/"
-strip "$STAGE/bin/deckcraft" "$STAGE/bin/deckcraft-cli" 2>/dev/null || true
-install -m 644 "$LINUX/$APP_ID.desktop" "$STAGE/share/applications/"
-install -m 644 "$LINUX/$APP_ID.mime.xml" "$STAGE/share/mime/packages/$APP_ID.xml"
+mv "$STAGE/bin/deckcraft" "$STAGE/bin/wooshin-slides"
+mv "$STAGE/bin/deckcraft-cli" "$STAGE/bin/wooshin-slides-cli"
+strip "$STAGE/bin/wooshin-slides" "$STAGE/bin/wooshin-slides-cli" 2>/dev/null || true
+install -m 644 "$LINUX/$SOURCE_APP_ID.desktop" "$STAGE/share/applications/$APP_ID.desktop"
+install -m 644 "$LINUX/$SOURCE_APP_ID.mime.xml" "$STAGE/share/mime/packages/$APP_ID.xml"
 sed -e "s/@VERSION@/$VERSION/g" -e "s/@DATE@/$DECKCRAFT_BUILD_DATE/g" \
-  "$LINUX/$APP_ID.metainfo.xml.in" >"$STAGE/share/metainfo/$APP_ID.metainfo.xml"
+  "$LINUX/$SOURCE_APP_ID.metainfo.xml.in" >"$STAGE/share/metainfo/$APP_ID.metainfo.xml"
 cp -R "$ROOT/assets/app-icon/hicolor" "$STAGE/share/icons/"
+for icon in "$STAGE/share/icons/hicolor"/*/apps/"$SOURCE_APP_ID".png "$STAGE/share/icons/hicolor"/*/apps/"$SOURCE_APP_ID".svg; do
+  [ -f "$icon" ] || continue
+  mv "$icon" "$(dirname "$icon")/$APP_ID.${icon##*.}"
+done
 copy_docs "$STAGE/share/doc/deckcraft"
 
 tar -C "$WORK" -czf "$DIST/$NAME.tar.gz" "$NAME"
-"$STAGE/bin/deckcraft-cli" --version
+"$STAGE/bin/wooshin-slides-cli" --version
 echo "wrote $DIST/$NAME.tar.gz"
 ls -lh "$DIST/$NAME.tar.gz"

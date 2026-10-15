@@ -47,7 +47,7 @@ fn title(id: &str) -> &'static str {
         "paragraph" => "Paragraph",
         "tabs" => "Tabs",
         "font" => "Font",
-        "about" => "About DeckCraft",
+        "about" => "About Wooshin Slides",
         "preferences" => "Preferences",
         "autocorrect" => "AutoCorrect",
         "gridOptions" => "Grid Options",
@@ -68,10 +68,10 @@ fn title(id: &str) -> &'static str {
         "smartart" => "Choose a SmartArt Graphic",
         "bullets" => "Bullets and Numbering",
         "action" => "Action Settings",
-        "quit" => "DeckCraft",
+        "quit" => "Wooshin Slides",
         "themeColors" => "Create New Theme Colors",
         "themeFonts" => "Create New Theme Fonts",
-        _ => "DeckCraft",
+        _ => "Wooshin Slides",
     }
 }
 
@@ -2559,7 +2559,7 @@ pub fn about(_app: &mut SlideApp, ui: &mut Ui) {
     ui.vertical_centered(|ui| {
         let (r, _) = ui.allocate_exact_size(vec2(64.0, 64.0), Sense::hover());
         paint_logo(ui.painter(), r);
-        ui.label(egui::RichText::new("DeckCraft").font(theme::bold(22.0)));
+        ui.label(egui::RichText::new("Wooshin Slides").font(theme::bold(22.0)));
         ui.label(egui::RichText::new(version_line()).color(t.text_dim));
         ui.add_space(6.0);
         ui.label("Presentations and slide shows, rebuilt from scratch in pure Rust.");
@@ -2590,18 +2590,18 @@ pub fn version_line() -> String {
 
 /// DeckCraft's mark, drawn in code: a slide card with a play triangle in our orange.
 pub fn paint_logo(p: &egui::Painter, r: Rect) {
-    let orange = Color32::from_rgb(0xF2, 0x6B, 0x1D);
-    let deep = Color32::from_rgb(0xC2, 0x4E, 0x14);
-    let card = r.shrink(r.width() * 0.08);
-    p.rect_filled(card.translate(vec2(r.width() * 0.04, r.width() * 0.05)), CornerRadius::same((r.width() * 0.14) as u8), deep);
-    p.rect_filled(card, CornerRadius::same((r.width() * 0.14) as u8), orange);
-    let c = card.center();
-    let s = card.width() * 0.22;
-    p.add(egui::Shape::convex_polygon(
-        vec![pos2(c.x - s * 0.7, c.y - s), pos2(c.x + s, c.y), pos2(c.x - s * 0.7, c.y + s)],
-        Color32::WHITE,
-        Stroke::NONE,
-    ));
+    // Original Wooshin presentation symbol, matching the platform icon's navy/gold palette.
+    let navy = Color32::from_rgb(0x07, 0x1f, 0x3b);
+    let gold = Color32::from_rgb(0xd4, 0xa6, 0x2a);
+    let point = |x: f32, y: f32| pos2(r.left() + x * r.width(), r.top() + y * r.height());
+    let stroke = Stroke::new((r.width() * 0.035).max(1.0), gold);
+    p.rect_filled(r, CornerRadius::same((r.width() * 0.21) as u8), navy);
+    p.rect_stroke(Rect::from_min_max(point(0.25, 0.32), point(0.75, 0.65)), r.width() * 0.03, stroke, egui::StrokeKind::Inside);
+    for (x, top) in [(0.35, 0.50), (0.44, 0.44), (0.53, 0.39)] {
+        p.line_segment([point(x, 0.57), point(x, top)], stroke);
+    }
+    p.line_segment([point(0.5, 0.65), point(0.5, 0.75)], stroke);
+    p.line_segment([point(0.42, 0.75), point(0.58, 0.75)], stroke);
 }
 
 /// The selection's proofing language and whether it's marked Do Not Check Spelling: the run at
@@ -3169,7 +3169,7 @@ fn find_dialog(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                 p["with"] = json!(d.get("with", ""));
                 let msg = match app.session.execute("text.replace", &p) {
                     Ok(v) => format!("Replaced {} occurrence(s).", v.get("replaced").and_then(Value::as_u64).unwrap_or(0)),
-                    Err(_) => format!("DeckCraft can't find “{text}”."),
+                    Err(_) => format!("Wooshin Slides can't find “{text}”."),
                 };
                 d.fields.insert("status".into(), msg);
                 d.fields.remove("cur");
@@ -3184,7 +3184,7 @@ fn find_dialog(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     if find_next {
         let list = app.session.execute("text.find", &q).ok().and_then(|v| v.as_array().cloned()).unwrap_or_default();
         if list.is_empty() {
-            d.fields.insert("status".into(), format!("DeckCraft can't find “{text}”."));
+            d.fields.insert("status".into(), format!("Wooshin Slides can't find “{text}”."));
             d.fields.remove("cur");
         } else {
             let n = d.get("next", "0").parse::<usize>().unwrap_or(0) % list.len();

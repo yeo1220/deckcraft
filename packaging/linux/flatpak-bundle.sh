@@ -16,7 +16,8 @@ set -euo pipefail
 # shellcheck source=../common.sh
 . "$(dirname "${BASH_SOURCE[0]}")/../common.sh"
 HERE="$ROOT/packaging/linux"
-APP_ID=ai.storyteller.deckcraft
+SOURCE_APP_ID=ai.storyteller.deckcraft
+APP_ID=com.wooshin.tools.slides
 FLATHUB=https://dl.flathub.org/repo/flathub.flatpakrepo
 
 TEST=1
@@ -49,8 +50,8 @@ WORK="$CARGO_TARGET_DIR/flatpak-bundle"
 rm -rf "$WORK"
 mkdir -p "$WORK/stage"
 tar -xzf "$TARBALL" -C "$WORK/stage" --strip-components=1
-[ -x "$WORK/stage/bin/deckcraft" ] || { echo "error: $TARBALL has no bin/deckcraft" >&2; exit 1; }
-cp "$HERE/flatpak/$APP_ID.bundle.yml" "$WORK/$APP_ID.yml"
+[ -x "$WORK/stage/bin/wooshin-slides" ] || { echo "error: $TARBALL has no bin/wooshin-slides" >&2; exit 1; }
+cp "$HERE/flatpak/$SOURCE_APP_ID.bundle.yml" "$WORK/$APP_ID.yml"
 
 flatpak remote-add --user --if-not-exists flathub "$FLATHUB"
 # --disable-rofiles-fuse: no FUSE in containers and CI runners.
@@ -65,7 +66,7 @@ echo "wrote $OUT"
 if [ "$TEST" = 1 ]; then
   flatpak install --user -y --noninteractive --reinstall "$OUT"
   flatpak info --user "$APP_ID"
-  flatpak run --command=deckcraft-cli "$APP_ID" --version
+  flatpak run --command=wooshin-slides-cli "$APP_ID" --version
   flatpak run --command=sh "$APP_ID" -c 'ls /app/share/applications /app/share/metainfo /app/share/mime/packages /app/share/icons/hicolor/256x256/apps'
 fi
 echo "==> done"
